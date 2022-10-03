@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const jsonwebtoken = require('jsonwebtoken');
-const schema = require('../validator/schema');
+const schema = require('../validator /schema');
 
 const Ajv = require("ajv");
-const ajv = new Ajv(addFormat("UA_Phone", /^(?:\+38)?(0\d{9})$/));
+const ajv = new Ajv();
 
-// ajv.;
+ajv.addFormat("UA_Phone", /^(?:\+38)?(0\d{9})$/);
 
 
 const validate = ajv.compile(schema);
@@ -60,9 +60,14 @@ router.route('/users')
         message: "New user successfully registered"
       }).end();
     } catch (error) {
-
+      if(error.message === "") {
+        res.status(409).json({
+          success: false,
+          message: "User with this phone or email already exist"
+        }).end();
+      } else res.status(400).json(error).end();
       console.log(error);
-      res.status(400).send(error);
+      
     }
   }) 
 
