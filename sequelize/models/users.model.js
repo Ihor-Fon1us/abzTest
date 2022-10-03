@@ -17,6 +17,7 @@ module.exports = (sequelize) => {
         },
         phone: {
             type: DataTypes.STRING,
+			unique: true,
         },
         position_id: {
             type: DataTypes.STRING,
