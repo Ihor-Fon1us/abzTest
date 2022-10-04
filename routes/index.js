@@ -1,20 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const jsonwebtoken = require('jsonwebtoken');
-const schema = require('../validator /schema');
+const sequelize = require('../sequelize');
+// const schema = require('../validator /user.schema');
 
-const Ajv = require("ajv");
-const ajv = new Ajv();
-
-ajv.addFormat("UA_Phone", /^(?:\+38)?(0\d{9})$/);
+// const Ajv = require("ajv");
 
 
-const validate = ajv.compile(schema);
+// const ajv = new Ajv();
+// const addFormats = require("ajv-formats")(ajv);
+// //addFormats(ajv)
+
+// //ajv.addFormat("UA_Phone", /^(?:\+38)?(0\d{9})$/);
+
+
+// const validate = ajv.compile(schema);
 
 const getToken = () => {
   return (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    const token = jsonwebtoken.sign({email: "122121212"}, "12");
+    const token = jsonwebtoken.sign({email: "122121212"}, "12");                 // fix generation token
     return res.status(200).json({success: true, token}).end();
   }
 }
@@ -51,17 +56,18 @@ router.route('/users')
   .get((req, res, next) => {
 
   })
-  .post(userValidate() ,async (req, res, next) => {
+  .post(async (req, res, next) => {
     try {
-      const user = await sequelize.models.users.create(req.body);
-      res.status(200).json({
-        success: true,
-        user_id: user.id,
-        message: "New user successfully registered"
-      }).end();
+      await sequelize.models.Users.create(req.body).then(() => {
+        res.status(200).json({
+          success: true,
+          user_id: user.id,
+          message: "New user successfully registered"
+        }).end();
+      })
     } catch (error) {
       if(error.message === "") {
-        res.status(409).json({
+        res.status(409).json({                                                // fix 409
           success: false,
           message: "User with this phone or email already exist"
         }).end();

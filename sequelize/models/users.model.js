@@ -14,10 +14,16 @@ module.exports = (sequelize) => {
         email: {
             type: DataTypes.STRING,
             unique: true,
+			validate: {
+				isEmail: true, 
+			}
         },
         phone: {
             type: DataTypes.STRING,
 			unique: true,
+			validate: {
+				is: /^(?:\+38)?(0\d{9})$/,
+			}
         },
         position_id: {
             type: DataTypes.STRING,
