@@ -7,8 +7,22 @@ const sequelize = new Sequelize(config.POSTGRES_DB, config.POSTGRES_USER, config
   dialect: 'postgres'
 });
 
-const Users = require('./models/users.model');
+const Users = require('../models/users.model');
+const Positions = require('../models/positions.model');
 
 Users(sequelize);
-sequelize.sync();
+Positions(sequelize);
+
+sequelize.models.position.hasMany(sequelize.models.user, {
+  foreignKey: 'position_id',
+  // sourceKey: 'id'
+});
+ sequelize.models.user.belongsTo(sequelize.models.position,{
+  foreignKey: 'position_id',
+  // sourceKey: 'id'
+});
+
+
+
+
 module.exports = sequelize;
