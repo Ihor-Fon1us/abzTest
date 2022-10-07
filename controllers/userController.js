@@ -7,6 +7,7 @@ sequelize.sync();
 module.exports.createUserHandler = async (req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   try {
+    if(req.body.file == '') new newValidationError(["Image is invalid."]);
     await sequelize.models.user.create(req.body).then((user) => {
       return res.status(200).json({
         success: true,

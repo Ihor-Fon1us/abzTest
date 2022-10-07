@@ -3,3 +3,16 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  form(action='/users' method='POST')
+          br
+          input.form-control(placeholder='Name' type='text' name='name')
+          br
+          input.form-control(placeholder='Email' type='text' name='email')
+          br
+          input.form-control(placeholder='Phone' type='text' name='phone')
+          br
+          input.form-control(placeholder='Position' type='text' name='position_id')
+          br
+          input#image(type='file' name='file' accept='.jpg, .jpeg')
+          br
+          input.btn.btn-light(type='submit' value='Continue')
