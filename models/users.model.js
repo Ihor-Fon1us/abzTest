@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { PhotoError } = require('../controllers/AplicationErrors');
 
 module.exports = (sequelize) => {
 	sequelize.define('user', {
@@ -69,7 +70,20 @@ module.exports = (sequelize) => {
 			}
 		},
 		photo: {
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			validate: {
+				isError(value) {
+					if (value instanceof PhotoError) {
+						throw new Error("Image is invalid.");
+					}
+					if (value instanceof MulterError) {
+						if(value.code === "jpg"){
+							throw new Error(value.field);
+						} 
+						throw new Error("The photo may not be greater than 5 Mbytes.");
+					}
+				}
+			}
 		}
 	});
 };

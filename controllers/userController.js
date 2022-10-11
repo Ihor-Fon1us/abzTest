@@ -1,13 +1,13 @@
 const sequelize = require('../sequelize');
-const { newValidationError, UserNotFoundError } = require('./error');
+const { ValidationError, UserNotFoundError } = require('./APIErrors');
 const Mapper = require('./mapper');
-
 sequelize.sync();
+
+
 
 module.exports.createUserHandler = async (req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   try {
-    if(req.body.file == '') new newValidationError(["Image is invalid."]);
     await sequelize.models.user.create(req.body).then((user) => {
       return res.status(200).json({
         success: true,
@@ -16,31 +16,28 @@ module.exports.createUserHandler = async (req, res, next) => {
       }).end();
     })
   } catch (error) {
-    next(new newValidationError(error.errors.reduce(function (m, v) { m[v.path] = [v.message]; return m; }, {})))
+    next(new ValidationError(error.errors.reduce(function (m, v) { m[v.path] = [v.message]; return m; }, {})));
   }
 }
 
 
 module.exports.getUserHandler = async (req, res, next) => {
   try {
+    const offset = req.query.offset > 0 ? req.query.offset : ((req.query.page - 1) * req.query.count);
+    const totalUsers = await sequelize.models.user.count();
     const users = await sequelize.models.user.findAll({
       include: [{
-        model: sequelize.models.position, 
-      }],})
-    res.status(200).json({
-      success: true,
-      page: curentPage,
-      total_pages: totalPages,
-      total_users: users.count,
-      count: req.body.count,
-      links: {
-        next_url: "https://frontend-test-assignment-api.abz.agency/api/v1/users?page=2&count=5",
-        prev_url: null
-      },
-      users: users
+        model: sequelize.models.position,
+      }],
+      offset: offset,
+      limit: req.query.count,
     })
+    const data = Mapper.UsersToAPI(req, users, totalUsers, offset, "localhost:3000");
+    res.status(200).json(
+      Mapper.UsersToAPI(req, users, totalUsers, offset, "localhost:3000")
+    );
   } catch (error) {
-
+    next(error);
   }
 }
 
@@ -50,8 +47,9 @@ module.exports.getUserById = async (req, res, next) => {
   try {
     const user = await sequelize.models.user.findByPk(req.params.id, {
       include: [{
-        model: sequelize.models.position, 
-      }],});
+        model: sequelize.models.position,
+      }],
+    });
     if (user === null) {
       return next(new UserNotFoundError());
     }
@@ -60,7 +58,6 @@ module.exports.getUserById = async (req, res, next) => {
       user: Mapper.UserToAPI(user)
     })
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }

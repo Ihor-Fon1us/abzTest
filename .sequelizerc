@@ -1,5 +1,5 @@
 const path = require('path');
 
 module.exports = {
-  "seeders-path": path.resolve('./seedfiles/seed'),
+  seeders-path: path.resolve('./seedfiles/seed'),
 };

@@ -1,4 +1,4 @@
-class newValidationError extends Error{
+class ValidationError extends Error{
     constructor(fails) {
         super();
         this.message = "Validation error"
@@ -8,7 +8,6 @@ class newValidationError extends Error{
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports.newValidationError = newValidationError;
 
 class UserNotFoundError extends Error{
     constructor() {
@@ -22,7 +21,6 @@ class UserNotFoundError extends Error{
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports.UserNotFoundError = UserNotFoundError;
 
 class TokenError extends Error{
     constructor() {
@@ -33,7 +31,6 @@ class TokenError extends Error{
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports.TokenError = TokenError;
 
 class PageNotFoundError extends Error{
     constructor() {
@@ -44,7 +41,6 @@ class PageNotFoundError extends Error{
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports.PageNotFoundError = PageNotFoundError;
 
 class PositionsNotFoundError extends Error{
     constructor() {
@@ -55,4 +51,12 @@ class PositionsNotFoundError extends Error{
         Error.captureStackTrace(this, this.constructor);
     }
 }
-module.exports.PositionsNotFoundError = PositionsNotFoundError;
+
+module.exports = {
+    ValidationError,
+    UserNotFoundError,
+    TokenError,
+    PageNotFoundError,
+    PositionsNotFoundError,
+}
+

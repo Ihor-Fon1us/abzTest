@@ -1,10 +1,10 @@
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../bin/config');
-const { TokenError } = require('./error');
+const { TokenError } = require('./APIErrors');
 
 module.exports.getToken = (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  const token = jsonwebtoken.sign({ token: "token" }, config.COST_JWT);
+  const token = jsonwebtoken.sign({ token: token }, config.COST_JWT);
   return res.status(200).cookie('accessToken', token, { maxAge: 2400000, secure: false, httpOnly: true }).json({ success: true, token });
 }
 
