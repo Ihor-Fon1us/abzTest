@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { PhotoError } = require('../controllers/AplicationErrors');
+const multer = require('multer')
 
 module.exports = (sequelize) => {
 	sequelize.define('user', {
@@ -76,7 +77,7 @@ module.exports = (sequelize) => {
 					if (value instanceof PhotoError) {
 						throw new Error("Image is invalid.");
 					}
-					if (value instanceof MulterError) {
+					if (value instanceof multer.MulterError) {
 						if(value.code === "jpg"){
 							throw new Error(value.field);
 						} 

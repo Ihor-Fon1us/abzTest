@@ -4,7 +4,7 @@ class ValidationError extends Error{
         this.message = "Validation error"
         this.statusCode = 422;
         this.fails = fails;
-        
+
         Error.captureStackTrace(this, this.constructor);
     }
 }
@@ -15,10 +15,8 @@ class UserNotFoundError extends Error{
         this.message = "The user with the requested identifier does not exist";
         this.statusCode = 404;
         this.fails = {
-            "user_id" : [ "User not found" ]
+            "user_id": [ "User not found" ]
         };
-        
-        Error.captureStackTrace(this, this.constructor);
     }
 }
 
@@ -27,8 +25,6 @@ class TokenError extends Error{
         super();
         this.statusCode = 401;
         this.message = "The token expired.";
-        
-        Error.captureStackTrace(this, this.constructor);
     }
 }
 
@@ -37,8 +33,6 @@ class PageNotFoundError extends Error{
         super();
         this.statusCode = 404;
         this.message = "Page not found.";
-        
-        Error.captureStackTrace(this, this.constructor);
     }
 }
 

@@ -51,7 +51,7 @@ module.exports.getUserById = async (req, res, next) => {
       }],
     });
     if (user === null) {
-      return next(new UserNotFoundError());
+      return next(new UserNotFoundError(req.params.id));
     }
     res.status(200).json({
       success: true,

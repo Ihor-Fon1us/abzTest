@@ -3,25 +3,34 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const fs = require('fs');
+const { OpenApiValidator } = require("express-openapi-validate");
+const OpenApiValidator2 = require('express-openapi-validator');
+const jsYaml = require("js-yaml");
 const config = require('./bin/config');
 
 const indexRouter = require('./routes/index');
 
-const folder = . + config.PHOTO_FOLDER;
+const folder = config.PHOTO_FOLDER;
 fs.access(folder, (err) => {
-  if(err) {
+  if (err) {
     fs.mkdirSync(folder, { recursive: true });
   }
-});   
+});
 
 const app = express();
+const openApiDocument = jsYaml.load(
+  fs.readFileSync('./api/openapi.yaml', "utf-8"),
+);
+const validator = new OpenApiValidator(openApiDocument);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-app.use(logger('dev'));
+// app.use(
+//   OpenApiValidator2.middleware({
+//     apiSpec: './api/openapi.yaml',
+//   }),
+// );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -30,18 +39,13 @@ app.use(express.static(path.join(__dirname, 'images')));
 app.use('/', indexRouter);
 
 // error handler
-app.use(function(err, req, res, next) {
-  res.setHeader('Content-Type', 'application/json');
-  if (err.statusCode) {
-    const response = {
-      success: false,
-      message: err.message,
-      fails: err.fails
-    }
-   return res.status(err.statusCode).json(response).end();
-  } else {
-    res.status(500).end();
-  }
+app.use(function (error, req, res, next) {
+  res.status(error.status || 500).json({
+    success: false,
+    message: error.message,
+    fails: error.fails,
+    errors: error.errors,
+  });
 });
 
 module.exports = app;
