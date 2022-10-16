@@ -21,7 +21,7 @@ module.exports = function PhotoCompressionMiddleware (req, res, next) {
                 if(err) {
                     req.body.photo = new PhotoError();
                 } else {
-                    req.body.photo = filename;
+                    req.body.photo = filename.split('images')[1];
                 }
                 next();
             });;

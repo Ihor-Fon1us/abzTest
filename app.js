@@ -34,7 +34,7 @@ app.set('view engine', 'jade');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static('./images'));
 
 app.use('/', indexRouter);
 
