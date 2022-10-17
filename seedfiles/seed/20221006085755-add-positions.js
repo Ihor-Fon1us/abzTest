@@ -1,5 +1,5 @@
 'use strict';
-const GenerateUser = require('./GenerateUser');
+const GenerateUser = require('../GenerateUser');
 const generator = new GenerateUser();
 
 /** @type {import('sequelize-cli').Migration} */
