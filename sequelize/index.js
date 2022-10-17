@@ -15,11 +15,9 @@ Positions(sequelize);
 
 sequelize.models.position.hasMany(sequelize.models.user, {
   foreignKey: 'position_id',
-  // sourceKey: 'id'
 });
  sequelize.models.user.belongsTo(sequelize.models.position,{
   foreignKey: 'position_id',
-  // sourceKey: 'id'
 });
 
 

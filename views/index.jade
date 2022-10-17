@@ -3,7 +3,7 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  form(action='/users' method='POST')
+  form(action='/users' method='POST' enctype='multipart/form-data')
           br
           input.form-control(placeholder='Name' type='text' name='name')
           br
@@ -13,6 +13,6 @@ block content
           br
           input.form-control(placeholder='Position' type='text' name='position_id')
           br
-          input#image(type='file' name='file' accept='.jpg, .jpeg')
+          input#image(type='file' name='file' )
           br
           input.btn.btn-light(type='submit' value='Continue')

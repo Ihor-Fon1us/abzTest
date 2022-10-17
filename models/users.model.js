@@ -1,4 +1,6 @@
 const { DataTypes } = require('sequelize');
+const { PhotoError } = require('../controllers/AplicationErrors');
+const multer = require('multer')
 
 module.exports = (sequelize) => {
 	sequelize.define('user', {
@@ -54,7 +56,6 @@ module.exports = (sequelize) => {
 		},
 		position_id: {
 			allowNull: false,
-			foreignKey: true,
 			type: DataTypes.INTEGER,
 			validate: {
 				notNull: true,
@@ -69,7 +70,20 @@ module.exports = (sequelize) => {
 			}
 		},
 		photo: {
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			validate: {
+				isError(value) {
+					if (value instanceof PhotoError) {
+						throw new Error("Image is invalid.");
+					}
+					if (value instanceof multer.MulterError) {
+						if(value.code === "jpg"){
+							throw new Error(value.field);
+						} 
+						throw new Error("The photo may not be greater than 5 Mbytes.");
+					}
+				}
+			}
 		}
 	});
 };

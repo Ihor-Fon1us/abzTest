@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: Swagger Users - OpenAPI 3.0
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+paths:
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get users
+      operationId: getUsers
+      parameters:
+        - name: page
+          in: query
+          description: Specify the page that you want to retrieve
+          required: true
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+        - name: offset
+          in: query
+          description: Specify the missing record number
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 0
+            type: integer
+        - name: count
+          in: query
+          description: Specify the amount of items that will be retrieved per page
+          required: true
+          style: form
+          explode: true
+          schema:
+            maximum: 100
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+  /users/{id}:
+    get:
+      tags:
+        - usersByID
+      summary: Find user by ID
+      description: Returns a single user
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+components:
+  schemas:
+    inline_response_200:
+      type: object
+        
+          

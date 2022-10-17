@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../bin/config');
-const { TokenError } = require('./error');
+const { TokenError } = require('./APIErrors');
 
 module.exports.getToken = (req, res) => {
   res.setHeader('Content-Type', 'application/json');

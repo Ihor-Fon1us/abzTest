@@ -1,5 +1,5 @@
 const sequelize = require('../sequelize');
-const { PositionsNotFoundError } = require('./error');
+const { PositionsNotFoundError } = require('./APIErrors');
 
 module.exports.getPosiions = async (req, res, next) => {
     res.setHeader('Content-Type', 'application/json');

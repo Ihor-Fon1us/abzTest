@@ -1,46 +1,51 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const fs = require('fs');
+const OpenApiValidator = require('express-openapi-validator');
+const config = require('./bin/config');
 
 const indexRouter = require('./routes/index');
+const { HttpError } = require('express-openapi-validator/dist/framework/types');
+
+const folder = config.PHOTO_FOLDER;
+fs.access(folder, (err) => {
+  if (err) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+});
 
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static('./images'));
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: './api/openapi.yaml',
+    ignoreUndocumented: true
+  }),
+);
 app.use('/', indexRouter);
 
-// catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
-
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.setHeader('Content-Type', 'application/json');
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  if (err.statusCode) {
-    const response = {
-      success: false,
-      message: err.message,
-      fails: err.fails
-    }
-   return res.status(err.statusCode).json(response).end();
+app.use(function (error, req, res, next) {
+  if (error instanceof HttpError) {
+    error.status = 422;
+    error.message = "Validation failed";
+    error.fails = error.errors.reduce((a, v) => ({ ...a, [v.path.split(".")[v.path.split(".").length - 1]]: v.message}), {}); 
+    error.errors = undefined;
   }
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(error.status || 500).json({
+    success: false,
+    message: error.message,
+    fails: error.fails,
+    errors: error.errors,
+  });
 });
 
 module.exports = app;
