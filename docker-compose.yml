@@ -2,6 +2,7 @@ version: '3.8'
 services:
   db:
     container_name: pg_container
+    hostname: db
     image: postgres
     restart: always
     environment:
@@ -18,7 +19,9 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - 5050:80
+      - 5050:5050
+    expose:
+      - 5050
   server:
     container_name: server
     hostname: server
@@ -29,16 +32,14 @@ services:
       - 8080:8080
     expose:
       - 8080
+    command: sh -c '/bin/wait-for-it.sh db:5432 --timeout=30 -- node ./bin/www'
     depends_on:
       - db
-    # command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=30 -- node ./bin/www'
-    # networks:
-    #   - backend
     environment:
       - PORT_SERVER=8080
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=test_db
-      - POSTGRES_HOST=127.0.0.1
+      - POSTGRES_HOST=db
       - COST_JWT=tokencost
       - TINIFY_KEY=qSy8Bxxm6Zym101zzl643PBFtqVQbTKB

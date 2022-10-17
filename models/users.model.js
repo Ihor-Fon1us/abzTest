@@ -56,7 +56,6 @@ module.exports = (sequelize) => {
 		},
 		position_id: {
 			allowNull: false,
-			foreignKey: true,
 			type: DataTypes.INTEGER,
 			validate: {
 				notNull: true,

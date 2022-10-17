@@ -16,7 +16,9 @@ module.exports.createUserHandler = async (req, res, next) => {
       }).end();
     })
   } catch (error) {
-    next(new ValidationError(error.errors.reduce(function (m, v) { m[v.path] = [v.message]; return m; }, {})));
+    if (Array.isArray(error.errors)) {
+      next(new ValidationError(error.errors.reduce(function (m, v) { m[v.path] = [v.message]; return m; }, {})));
+    } else next(error);
   }
 }
 
@@ -32,6 +34,9 @@ module.exports.getUserHandler = async (req, res, next) => {
       offset: offset,
       limit: req.query.count,
     })
+    if (users.length === 0) {
+      return next(new UserNotFoundError());
+    }
     const data = Mapper.UsersToAPI(req, users, totalUsers, offset, "localhost:3000");
     res.status(200).json(
       Mapper.UsersToAPI(req, users, totalUsers, offset, "localhost:3000")
@@ -50,8 +55,8 @@ module.exports.getUserById = async (req, res, next) => {
         model: sequelize.models.position,
       }],
     });
-    if (user === null) {
-      return next(new UserNotFoundError(req.params.id));
+    if (user.length === 0) {
+      return next(new UserNotFoundError());
     }
     res.status(200).json({
       success: true,
