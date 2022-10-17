@@ -8,19 +8,6 @@ externalDocs:
 servers:
   - url: http://localhost:3000
 paths:
-  /token:
-    get:
-      tags:
-        - token
-      summary: Get token
-      operationId: getToken
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_200"
   /users:
     get:
       tags:
@@ -63,30 +50,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/inline_response_200"
-    post:
-      tags:
-        - users
-      summary: Post users
-      description: User registration request.
-      operationId: postUser
-      parameters:
-        - name: token
-          in: header
-          required: false
-          schema:
-            type: object
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/users_body"
-      responses:
-        "200":
-          description: New user successfully registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_200"
   /users/{id}:
     get:
       tags:
@@ -111,34 +74,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/inline_response_200"
-  /positions:
-    get:
-      tags:
-        - positions
-      summary: get positions
-      description: Returns a list of positions
-      operationId: getPositions
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_200"
 components:
   schemas:
     inline_response_200:
       type: object
-    users_body:
-      type: object
-      properties:
-        name:
-          type: string
-        email:
-          type: string
-        phone: 
-          type: string
-        position_id:
-          type: string
         
           
