@@ -8,6 +8,19 @@ externalDocs:
 servers:
   - url: http://localhost:3000
 paths:
+  /:
+    get:
+      tags:
+        - view
+      summary: Get view
+      operationId: getView
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
   /token:
     get:
       tags:
@@ -30,7 +43,7 @@ paths:
       parameters:
         - name: page
           in: query
-          description: Specify the page that you want to retrieve!@#
+          description: Specify the page that you want to retrieve
           required: true
           style: form
           explode: true
@@ -62,19 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_200_1"
-        "404":
-          description: Page not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_404"
-        "422":
-          description: Validation failed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422"
+                $ref: "#/components/schemas/inline_response_200"
     post:
       tags:
         - users
@@ -101,25 +102,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_200_2"
-        "401":
-          description: The token expired.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_401"
-        "409":
-          description: The token expired.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_409"
-        "422":
-          description: The token expired.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_422_1"
+                $ref: "#/components/schemas/inline_response_200"
   /users/{id}:
     get:
       tags:
@@ -143,7 +126,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_200_3"
+                $ref: "#/components/schemas/inline_response_200"
   /positions:
     get:
       tags:
@@ -157,290 +140,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/inline_response_200_4"
+                $ref: "#/components/schemas/inline_response_200"
 components:
   schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-        position:
-          type: string
-        position_id:
-          type: integer
-        registration_timestamp:
-          type: integer
-        photo:
-          type: string
-      example:
-        registration_timestamp: 7
-        phone: phone
-        name: name
-        photo: photo
-        id: 5
-        position: position
-        email: ""
-        position_id: 2
     inline_response_200:
       type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-        token:
-          type: string
-      example:
-        success: true
-        token: token
-    inline_response_200_1:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-        page:
-          minimum: 1
-          type: integer
-        total_pages:
-          minimum: 1
-          type: integer
-        total_users:
-          minimum: 0
-          type: integer
-        count:
-          minimum: 1
-          type: integer
-          default: 5
-        links:
-          $ref: "#/components/schemas/inline_response_200_1_links"
-        users:
-          type: array
-          items:
-            $ref: "#/components/schemas/User"
-      example:
-        success: true
-        count: 1
-        links:
-          next_url: next_url
-          prev_url: prev_url
-        page: 1
-        total_pages: 1
-        total_users: 0
-        users:
-          - registration_timestamp: 7
-            phone: phone
-            name: name
-            photo: photo
-            id: 5
-            position: position
-            email: ""
-            position_id: 2
-          - registration_timestamp: 7
-            phone: phone
-            name: name
-            photo: photo
-            id: 5
-            position: position
-            email: ""
-            position_id: 2
-    inline_response_404:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: Page not found
-    inline_response_422:
-      type: object
-      properties:
-        code: 
-          type: string
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: Validation failed
-        fails:
-          type: object
-          
     users_body:
       type: object
       properties:
         name:
-          maxLength: 60
-          minLength: 2
           type: string
-          description: "The name must be at least 2 characters."
         email:
-          maxLength: 100
-          minLength: 2
           type: string
-          format: email
-        phone:
-          pattern: "^[\\+]{0,1}380([0-9]{9})$"
+        phone: 
           type: string
         position_id:
           type: string
-          pattern: "[1-9][0-9]*"
-        photo:
+        file:
           type: string
           format: binary
-    inline_response_200_2:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-        user_id:
-          type: integer
-        message:
-          type: string
-          default: New user successfully registered.
-      example:
-        user_id: 0
-        success: true
-        message: New user successfully registered.
-    inline_response_401:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: The token expired.
-    inline_response_409:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: User with this phone or email already exist.
-    inline_response_422_1:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: Validation failed.
-        fails:
-          type: object
-    inline_response_200_3:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-        position:
-          type: string
-        position_id:
-          type: integer
-        registration_timestamp:
-          type: integer
-        photo:
-          type: string
-      example:
-        registration_timestamp: 1
-        phone: phone
-        name: name
-        photo: photo
-        id: 0
-        position: position
-        email: ""
-        position_id: 6
-    inline_response_404_1:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: The user with the requested identifier does not exist
-        fails:
-          type: object
-    inline_response_200_4:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: true
-        positions:
-          type: array
-          items:
-            $ref: "#/components/schemas/inline_response_200_4_positions"
-      example:
-        success: true
-        positions:
-          - name: name
-            id: 0
-          - name: name
-            id: 0
-    inline_response_422_2:
-      type: object
-      properties:
-        success:
-          type: boolean
-          default: false
-        message:
-          type: string
-          default: Positions not found
-    inline_response_200_1_links:
-      type: object
-      properties:
-        next_url:
-          type: string
-        prev_url:
-          type: string
-      example:
-        next_url: next_url
-        prev_url: prev_url
-    inline_response_200_4_positions:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-      example:
-        name: name
-        id: 0
-    BadRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              errorCode:
-                type: string
-              message:
-                type: string
-              path:
-                type: string
-              description:
-                type: string
+          

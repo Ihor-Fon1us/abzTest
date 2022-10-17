@@ -6,7 +6,6 @@ const positionsController = require('../controllers/positionsController');
 const photoUpload = require('../middleware/photoUpload');
 const photoCropp = require('../middleware/photoCrop');
 const photoCompression = require('../middleware/photoCompression');
-const validateReq = require('../middleware/validateReq');
 
 router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });

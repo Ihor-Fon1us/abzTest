@@ -1,12 +1,9 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
-const { OpenApiValidator } = require("express-openapi-validate");
-const OpenApiValidator2 = require('express-openapi-validator');
-const jsYaml = require("js-yaml");
+const OpenApiValidator = require('express-openapi-validator');
 const config = require('./bin/config');
 
 const indexRouter = require('./routes/index');
@@ -19,20 +16,19 @@ fs.access(folder, (err) => {
 });
 
 const app = express();
-const openApiDocument = jsYaml.load(
-  fs.readFileSync('./api/openapi.yaml', "utf-8"),
-);
-const validator = new OpenApiValidator(openApiDocument);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-// app.use(
-//   OpenApiValidator2.middleware({
-//     apiSpec: './api/openapi.yaml',
-//   }),
-// );
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: './api/openapi.yaml',
+  }),
+);
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.text());
+app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static('./images'));
 
