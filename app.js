@@ -22,6 +22,7 @@ app.set('view engine', 'jade');
 app.use(
   OpenApiValidator.middleware({
     apiSpec: './api/openapi.yaml',
+    ignoreUndocumented: true
   }),
 );
 app.use(bodyParser.urlencoded());

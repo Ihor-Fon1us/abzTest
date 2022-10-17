@@ -8,19 +8,6 @@ externalDocs:
 servers:
   - url: http://localhost:3000
 paths:
-  /:
-    get:
-      tags:
-        - view
-      summary: Get view
-      operationId: getView
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/inline_response_200"
   /token:
     get:
       tags:
@@ -85,12 +72,9 @@ paths:
       parameters:
         - name: token
           in: header
-          description: ""
           required: false
-          style: simple
-          explode: false
           schema:
-            type: string
+            type: object
       requestBody:
         content:
           multipart/form-data:
@@ -156,7 +140,5 @@ components:
           type: string
         position_id:
           type: string
-        file:
-          type: string
-          format: binary
+        
           
