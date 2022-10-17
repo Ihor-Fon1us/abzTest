@@ -6,5 +6,6 @@ module.exports = {
     POSTGRES_HOST: process.env.POSTGRES_HOST || "127.0.0.1",
     COST_JWT: process.env.COST_JWT || "testcost",
     PHOTO_FOLDER: process.env.PHOTO_FOLDER || "./images/users",
-    TINIFY_KEY: process.env.TINIFY_KEY || "qSy8Bxxm6Zym101zzl643PBFtqVQbTKB"
+    TINIFY_KEY: process.env.TINIFY_KEY || "qSy8Bxxm6Zym101zzl643PBFtqVQbTKB",
+    EXTERNAL_DATABASE: process.env.EXTERNAL_DATABASE
 }
