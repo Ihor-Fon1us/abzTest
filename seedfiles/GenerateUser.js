@@ -7,7 +7,7 @@ class GenerateUser {
             email: faker.internet.email(),
             phone: faker.phone.phoneNumber('+38066#######'),
             position_id: +faker.datatype.number(3) + 1,
-            photo: "./images/users/seedphoto.jpeg",
+            photo: "./users/seedphoto.jpeg",
             createdAt: new Date(),
             updatedAt: new Date()
         }
