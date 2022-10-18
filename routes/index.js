@@ -8,7 +8,7 @@ const photoCropp = require('../middleware/photoCrop');
 const photoCompression = require('../middleware/photoCompression');
 
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Kriss' });
 });
 
 router.get('/token', tokenController.getToken);
