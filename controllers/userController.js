@@ -55,7 +55,7 @@ module.exports.getUserById = async (req, res, next) => {
         model: sequelize.models.position,
       }],
     });
-    if (user.length === 0) {
+    if (user === null) {
       return next(new UserNotFoundError());
     }
     res.status(200).json({
